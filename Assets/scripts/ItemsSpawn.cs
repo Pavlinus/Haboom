@@ -5,6 +5,7 @@ public class ItemsSpawn : MonoBehaviour {
 
 	public GameObject[] SpawnPoints;
 	public GameObject[] items;
+
 	float spawnFreq = 0.1f;
 	float lastSpawnTime = 0f;
 

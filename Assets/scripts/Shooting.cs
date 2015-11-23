@@ -6,6 +6,7 @@ public class Shooting : MonoBehaviour {
 	public GameObject[] bulletObj;
 	public Sprite[] tubeSprites;
 	public Sprite[] playerSprites;
+	public ParticleSystem[] shootParticles;
 
 	SpriteRenderer playerRenderer;
 	SpriteRenderer tubeRenderer;
@@ -13,7 +14,6 @@ public class Shooting : MonoBehaviour {
 	float shootFreq = 0.1f;
 	float shootTime = 1f;
 	int curSpriteIndex;
-	ColorType.ItemColor[] colorID;
 	
 	void Start () {
 		curSpriteIndex = 0;
@@ -29,7 +29,8 @@ public class Shooting : MonoBehaviour {
 		if (Input.GetMouseButton (0)) {
 			if (shootTime > shootFreq) {
 				shootTime = 0f;
-				
+
+				// Instantiate bullet object and make it moving
 				GameObject clone;
 				clone = Instantiate (bulletObj[curSpriteIndex], 
 				                     transform.position, 
@@ -37,6 +38,8 @@ public class Shooting : MonoBehaviour {
 
 				clone.GetComponent<Rigidbody2D> ().velocity = new Vector2 (10f, 0f);
 				Destroy (clone, 3f);
+
+				PlayShootParticles (shootParticles[curSpriteIndex]);
 			} else { 
 				shootTime += Time.deltaTime / 4f;
 			}
@@ -44,12 +47,19 @@ public class Shooting : MonoBehaviour {
 			shootTime = 1f;
 		}
 
+		// If right mouse button pressed
 		if (Input.GetMouseButtonDown (1)) {
 			curSpriteIndex++;
 			curSpriteIndex = curSpriteIndex % bulletObj.Length;
 
+			// Change player and tube skins 
 			playerRenderer.sprite = playerSprites[curSpriteIndex];
 			tubeRenderer.sprite = tubeSprites[curSpriteIndex];
 		}
+	}
+
+	void PlayShootParticles(ParticleSystem shootParticles) {
+		shootParticles.playOnAwake = true;
+		shootParticles.Play ();
 	}
 }
