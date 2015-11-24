@@ -6,6 +6,12 @@ public class Enemy : MonoBehaviour {
 	public ColorType.ItemColor color;
 	public int score;
 
+	GameObject gameManager;
+
+	void Start() {
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
+	}
+
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.tag.Equals ("Bullet")) {
 			Bullet bullet = collider.gameObject.GetComponent<Bullet> ();
@@ -14,14 +20,16 @@ public class Enemy : MonoBehaviour {
 			if (bullet.GetItemColor ().Equals (color)) {
 				GameManager.totalScore += score;
 
-				IncreaseColorCount();
+				IncreaseColorCount ();
 				Destroy (gameObject);
 			}
 		
-		} else if (collider.tag.Equals ("GameOver")) {
-			//Time.timeScale = 0f;
-
-			// Show game over menu
+		} else if (collider.tag.Equals ("Tube")) {
+			gameManager.GetComponent<GameOverMenu> ().SetComponentsState (true);
+			Time.timeScale = 0f;
+		
+		} else if (collider.tag.Equals ("DestroyArea")) {
+			Destroy (gameObject);
 		}
 	}
 
